@@ -1,0 +1,19 @@
+Structure:
+  opt arg1, arg2, ...
+Instructions:
+  nop - Takes no arguemnts; No operation.
+  mov - Takes two arguments; set a regeister to a value; regeister, int.
+  syscall - Takes no arguments; Performs a system call based on regeister values.
+  global - Take one argument; Sets the external start point of a program; label
+Labels:
+  name:
+    ; body
+Sections:
+  section .NAME
+    ; body
+System Calls:
+  0 - exit
+  1 - write
+Macros:
+  Exit: #exit
+    - Exits with zero
