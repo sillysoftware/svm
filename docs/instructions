@@ -1,5 +1,5 @@
 Structure:
-  opt arg1, arg2, ...
+  operation arg1, arg2, ...
 Instructions:
   nop - Takes no arguemnts; No operation.
   mov - Takes two arguments; set a regeister to a value; regeister, int.
