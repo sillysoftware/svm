@@ -100,6 +100,9 @@ def exec_dec(reg):
     else:
         print("Error: Unknown register")
 
+def exec_syscall():
+    print("Calling the system")
+
 
 operations = {
     "mov": lambda tokens: exec_mov(tokens[1], tokens[2]),
@@ -116,6 +119,7 @@ operations = {
     "div": lambda tokens: exec_div(tokens[1], tokens[2]),
     "inc": lambda tokens: exec_inc(tokens[1]),
     "dec": lambda tokens: exec_dec(tokens[1]),
+    "syscall": lambda tokens: exec_syscall(),
 }
 
 
