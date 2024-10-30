@@ -101,7 +101,20 @@ def exec_dec(reg):
         print("Error: Unknown register")
 
 def exec_syscall():
-    print("Calling the system")
+    nr = r[registers["rax"]]
+    match nr:
+        case 1:
+            if r[registers["rdi"]] == 1:
+                print(chr(r[registers["rsi"]]))
+            else:
+                print("svm: fatal_error:\n\tundefined file descriptor in rdi")
+                exit(1)
+        case 60:
+            exitcode = int(r[registers["rdi"]])
+            print(f"[Execution complete with exit code {exitcode}]")
+            exit(exitcode)
+        case _:
+            print("Undefined syscall in rax")
 
 
 operations = {
