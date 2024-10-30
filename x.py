@@ -1,5 +1,7 @@
+import readline
+
 r = [0] * 15
-stack=[]
+stack = []
 registers = {
     "rax": 0, "rbx": 1, "rcx": 2, "rdx": 3, "rdi": 4, "rsi": 5,
     "r8": 6, "r9": 7, "r10": 8, "r11": 9, "r12": 10, "r13": 11,
@@ -102,22 +104,27 @@ def exec_dec(reg):
         r[registers[reg]] = r[registers[reg]] - 1
     else:
         print("Error: Unknown register")
-        
+
+
 def exec_svm():
     print("svm (SVM) version 2024 0.0.1 Silly Software Foundation.")
-    
+
+
 def exec_push(val):
     stack.insert(0, val)
 
+
 def exec_pop():
     stack.pop(0)
-    
+
+
 def exec_peek(stakloc):
     if not stakloc:
         print(stack[stakloc])
     else:
         print(stack[0])
-    
+
+
 def exec_syscall():
     nr = r[registers["rax"]]
     match nr:
