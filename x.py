@@ -99,6 +99,9 @@ def exec_dec(reg):
         r[registers[reg]] = r[registers[reg]] - 1
     else:
         print("Error: Unknown register")
+        
+def exec_svm():
+    print("svm (SVM) version 2024 0.0.1 Silly Software Foundation.")
 
 def exec_syscall():
     nr = r[registers["rax"]]
@@ -133,12 +136,13 @@ operations = {
     "inc": lambda tokens: exec_inc(tokens[1]),
     "dec": lambda tokens: exec_dec(tokens[1]),
     "syscall": lambda tokens: exec_syscall(),
+    "version": lambda tokens: exec_svm(),
 }
 
 
 def g():
     while True:
-        source = input("(svm) >> ")
+        source = input("/ ")
         tokens = [token.strip(",") for token in source.split()]
         command = tokens[0]
         if command == "exit":
