@@ -111,7 +111,13 @@ def exec_push(val):
 
 def exec_pop():
     stack.pop(0)
-
+    
+def exec_peek(stakloc):
+    if not stakloc:
+        print(stack[stakloc])
+    else:
+        print(stack[0])
+    
 def exec_syscall():
     nr = r[registers["rax"]]
     match nr:
