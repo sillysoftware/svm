@@ -114,7 +114,6 @@ def exec_syscall():
                 exit(1)
         case 60:
             exitcode = int(r[registers["rdi"]])
-            print(f"[Execution complete with exit code {exitcode}]")
             exit(exitcode)
         case _:
             print("Undefined syscall in rax")
@@ -142,7 +141,7 @@ operations = {
 
 def g():
     while True:
-        source = input("/ ")
+        source = input()
         tokens = [token.strip(",") for token in source.split()]
         command = tokens[0]
         if command == "exit":
@@ -158,6 +157,7 @@ def g():
 
 
 def main():
+    print("/")
     g()
 
 
