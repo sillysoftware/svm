@@ -1,4 +1,5 @@
 r = [0] * 15
+stack=[]
 registers = {
     "rax": 0, "rbx": 1, "rcx": 2, "rdx": 3, "rdi": 4, "rsi": 5,
     "r8": 6, "r9": 7, "r10": 8, "r11": 9, "r12": 10, "r13": 11,
@@ -18,6 +19,8 @@ def exec_mov(reg, value):
 def exec_dump(reg):
     if reg in registers:
         print(f"{reg} = {r[registers[reg]]}")
+    elif reg == "stack":
+        print(stack)
     else:
         print("Error: Unknown register")
 
@@ -102,6 +105,12 @@ def exec_dec(reg):
         
 def exec_svm():
     print("svm (SVM) version 2024 0.0.1 Silly Software Foundation.")
+    
+def exec_push(val):
+    stack.insert(0, val)
+
+def exec_pop():
+    stack.pop(0)
 
 def exec_syscall():
     nr = r[registers["rax"]]
@@ -136,6 +145,8 @@ operations = {
     "dec": lambda tokens: exec_dec(tokens[1]),
     "syscall": lambda tokens: exec_syscall(),
     "version": lambda tokens: exec_svm(),
+    "push": lambda tokens: exec_push(tokens[1]),
+    "pop": lambda tokens: exec_pop(),
 }
 
 
