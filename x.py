@@ -1,6 +1,8 @@
 import readline
+import sys
 
 r = [0] * 15
+flags = ""
 stack = []
 registers = {
     "rax": 0, "rbx": 1, "rcx": 2, "rdx": 3, "rdi": 4, "rsi": 5,
@@ -18,18 +20,35 @@ def exec_mov(reg, value):
         print("Error: Unknown register")
 
 
-def exec_dump(reg):
+def exec_peek(reg):
     if reg in registers:
         print(f"{reg} = {r[registers[reg]]}")
-    elif reg == "stack":
-        print(stack)
+    elif isinstance(reg, int):
+        if 0 <= reg < len(stack):
+            print(stack[reg])
+        else:
+            print("svm: error:\n\tInvalid stack position")
+    elif reg == "flags":
+        print(flags)
     else:
-        print("Error: Unknown register")
+        print("svm: error:\n\tUnknown register or invalid stack position")
 
 
 def exec_core_dump():
     for reg, index in registers.items():
         print(f"{reg} = {r[index]}")
+
+
+def exec_cmp(reg, reg1):
+    global flags
+    res = r[registers[reg1]] = r[registers[reg]]
+    if debug:
+        print(r[registers[reg]])
+        print(r[registers[reg1]])
+    # Subtracts reg1 from reg and sets the ZF in they are the same,
+    # other is is left as is.
+    if res != 0:
+        flags = "ZF"
 
 
 def exec_xor(reg, reg1):
@@ -118,13 +137,6 @@ def exec_pop():
     stack.pop(0)
 
 
-def exec_peek(stakloc):
-    if not stakloc:
-        print(stack[stakloc])
-    else:
-        print(stack[0])
-
-
 def exec_syscall():
     nr = r[registers["rax"]]
     match nr:
@@ -143,7 +155,7 @@ def exec_syscall():
 
 operations = {
     "mov": lambda tokens: exec_mov(tokens[1], tokens[2]),
-    "dump": lambda tokens: exec_dump(tokens[1]),
+    "peek": lambda tokens: exec_peek(tokens[1]),
     "coredump": lambda tokens: exec_core_dump(),
     "xor": lambda tokens: exec_xor(tokens[1], tokens[2]),
     "and": lambda tokens: exec_and(tokens[1], tokens[2]),
@@ -160,6 +172,7 @@ operations = {
     "version": lambda tokens: exec_svm(),
     "push": lambda tokens: exec_push(tokens[1]),
     "pop": lambda tokens: exec_pop(),
+    "cmp": lambda tokens: exec_cmp(tokens[1], tokens[2]),
 }
 
 
@@ -167,6 +180,8 @@ def g():
     while True:
         source = input()
         tokens = [token.strip(",") for token in source.split()]
+        if debug:
+            print(tokens)
         command = tokens[0]
         if command == "exit":
             print("exit.")
@@ -184,5 +199,10 @@ def main():
     print("/")
     g()
 
+
+debug = False
+
+if "--debug" in sys.argv:
+    debug = True
 
 main()
