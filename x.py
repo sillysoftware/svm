@@ -20,16 +20,17 @@ def exec_mov(reg, value):
         print("Error: Unknown register")
 
 
-def exec_peek(reg):
-    if reg in registers:
-        print(f"{reg} = {r[registers[reg]]}")
-    elif isinstance(reg, int):
-        if 0 <= reg < len(stack):
-            print(stack[reg])
+def exec_peek(param):
+    if param in registers:
+        print(f"{param} = {r[registers[param]]}")
+    elif param.isdigit():
+        index = int(param)
+        if 0 <= index < len(stack):
+            print(f"Stack[{index}] = {stack[index]}")
         else:
             print("svm: error:\n\tInvalid stack position")
-    elif reg == "flags":
-        print(flags)
+    elif param == "flags":
+        print(f"Flags = {flags}")
     else:
         print("svm: error:\n\tUnknown register or invalid stack position")
 
@@ -133,8 +134,22 @@ def exec_push(val):
     stack.insert(0, val)
 
 
-def exec_pop():
+def exec_pop(reg):
+    r[registers[reg]] = stack[0]
     stack.pop(0)
+
+
+def exec_run():
+    i = 0
+    while i < len(progc):
+        tokens = prog[i]
+        command = tokens[0]
+        if command in operations:
+            try:
+                operations[command](tokens)
+            except (IndexError, ValueError):
+                print("Error: Invalid syntax")
+        i += 1
 
 
 def exec_syscall():
@@ -142,7 +157,7 @@ def exec_syscall():
     match nr:
         case 1:
             if r[registers["rdi"]] == 1:
-                print(chr(r[registers["rsi"]]))
+                print(chr(int(r[registers["rsi"]])))
             else:
                 print("svm: fatal_error:\n\tundefined file descriptor in rdi")
                 exit(1)
@@ -171,9 +186,12 @@ operations = {
     "syscall": lambda tokens: exec_syscall(),
     "version": lambda tokens: exec_svm(),
     "push": lambda tokens: exec_push(tokens[1]),
-    "pop": lambda tokens: exec_pop(),
+    "pop": lambda tokens: exec_pop(tokens[1]),
     "cmp": lambda tokens: exec_cmp(tokens[1], tokens[2]),
 }
+
+progc = []
+prog = []
 
 
 def g():
@@ -186,11 +204,16 @@ def g():
         if command == "exit":
             print("exit.")
             break
+        if command == "run":
+            exec_run()
         elif command in operations:
             try:
                 operations[command](tokens)
             except (IndexError, ValueError):
                 print("Error: Invalid syntax")
+        elif command not in progc and int(command) % 10 == 0:
+            progc.append(int(command))
+            prog.append(tokens[1:])
         else:
             print("Error: Unknown command")
 
