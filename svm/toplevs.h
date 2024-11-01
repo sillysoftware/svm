@@ -1,4 +1,4 @@
-/* main.cc: defines main() for c, cc, etc
+/* error.h: defines error handel functions for c, cc, etc
     Copyright (C) 2024-2024 Silly Software Foundation.
 
 This file is part of SVM.
@@ -12,13 +12,20 @@ FITNESS FOR A PARTICULAR PURPOSE. See the BSD 3-Clause Licence
 for more details.
 
 You should have received a copy of the BSD 3-Clause
-along with SCC; see the file LICENCE. If not see
+along with SVM; see the file LICENCE. If not see
 <https://raw.githubusercontent.com/sillysoftware/svm/refs/heads/master/LICENSE> */
 
-#include "toplevs.h"
-#include <cstdio>
+#ifndef ERROR_H
+#define ERROR_H
 
-int main() {
-  printf("/\n");
-  toplevs();
-}
+#include <vector>
+#include <string>
+
+/* toplev()
+* @param argc Argument count
+* @param argv Value of each element in the vector of strings of the initial input args
+* @return void
+*/
+void toplevs();
+
+#endif

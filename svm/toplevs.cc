@@ -18,7 +18,6 @@ along with SCC; see the file LICENCE. If not see
 #include "toplevs.h"
 #include <cstdio>
 
-int main() {
-  printf("/\n");
-  toplevs();
+void toplevs() {
+  printf("Invoked toplevs");
 }
